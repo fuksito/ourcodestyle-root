@@ -1,0 +1,6 @@
+[submodule "api"]
+	path = api
+	url = https://github.com/fuksito/ourcodestyle-api
+[submodule "ui"]
+	path = ui
+	url = https://github.com/fuksito/ourcodestyle-ui
