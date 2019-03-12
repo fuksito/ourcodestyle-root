@@ -1,0 +1,68 @@
+version: "3"
+volumes:
+  db-data:
+    external: false
+  letsencrypt-html:
+    external: false
+  letsencrypt-data:
+    external: false
+services:
+  webserver:
+    build:
+      context: ./webserver
+    volumes:
+      - letsencrypt-html:/letsencrypt-html
+      - letsencrypt-data:/letsencrypt-data
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - anycable
+      - rails
+      - ui
+  ui:
+    image: 'fuksito/ourcodestyle_ui:0.03'
+  rails:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.production
+    entrypoint: bin/start
+    env_file:
+      - ./api/.env.production
+    environment:
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+      - CABLE_URL=ws://anycable:8080/cable
+    depends_on:
+      - redis
+      - db
+      - anycable
+  rpc:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.production
+    command: ./bin/anycable
+    env_file:
+      - ./api/.env.production
+    environment:
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_RPC_HOST=0.0.0.0:50051
+    depends_on:
+      - redis
+      - db
+  redis:
+    image: 'redis:3.2-alpine'
+  anycable:
+    image: 'anycable/anycable-go:v0.6.1'
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379/0
+      - ANYCABLE_RPC_HOST=rpc:50051
+    depends_on:
+      - redis
+      - rpc
+  db:
+    image: 'postgres:11.1-alpine'
+    volumes:
+      - db-data:/var/lib/postgresql/data
