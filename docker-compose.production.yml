@@ -10,6 +10,7 @@ services:
   webserver:
     build:
       context: ./webserver
+      dockerfile: Dockerfile
     volumes:
       - letsencrypt-html:/letsencrypt-html
       - letsencrypt-data:/letsencrypt-data
@@ -18,15 +19,15 @@ services:
       - "443:443"
     depends_on:
       - anycable
-      - rails
+      - api
       - ui
   ui:
-    image: 'fuksito/ourcodestyle_ui:0.03'
-  rails:
+    image: 'fuksito/ourcodestyle_ui:0.0.3'
+  api:
     build:
       context: ./api
       dockerfile: Dockerfile.production
-    entrypoint: bin/start
+    entrypoint: /app/bin/start
     env_file:
       - ./api/.env.production
     environment:
