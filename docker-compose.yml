@@ -11,7 +11,7 @@ services:
     ports:
       - "4000:3000"
     env_file:
-      - ./api/.env
+      - ./api/.env.development
     environment:
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - CABLE_URL=ws://localhost:8080/cable
@@ -35,7 +35,7 @@ services:
     volumes:
       - ./api:/app
     env_file:
-      - ./api/.env
+      - ./api/.env.development
     environment:
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - ANYCABLE_RPC_HOST=0.0.0.0:50051
