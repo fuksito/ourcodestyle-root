@@ -13,8 +13,40 @@ services:
     env_file:
       - ./api/.env.development
     environment:
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - CABLE_URL=ws://localhost:8080/cable
+    depends_on:
+      - redis
+      - db
+  sidekiq:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: sidekiq
+    volumes:
+      - ./api:/app
+    env_file:
+      - ./api/.env.development
+    environment:
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+    depends_on:
+      - redis
+      - db
+  rpc:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: ./bin/anycable
+    volumes:
+      - ./api:/app
+    env_file:
+      - ./api/.env.development
+    environment:
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_RPC_HOST=0.0.0.0:50051
     depends_on:
       - redis
       - db
@@ -27,21 +59,6 @@ services:
     depends_on:
       - anycable
       - api
-  rpc:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    command: ./bin/anycable
-    volumes:
-      - ./api:/app
-    env_file:
-      - ./api/.env.development
-    environment:
-      - ANYCABLE_REDIS_URL=redis://redis:6379/
-      - ANYCABLE_RPC_HOST=0.0.0.0:50051
-    depends_on:
-      - redis
-      - db
   anycable:
     image: 'anycable/anycable-go:v0.6.1'
     ports:
