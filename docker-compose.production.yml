@@ -22,7 +22,7 @@ services:
       - api
       - ui
   ui:
-    image: 'fuksito/ourcodestyle_ui:0.0.9'
+    image: 'fuksito/ourcodestyle_ui:latest'
   api:
     build:
       context: ./api
