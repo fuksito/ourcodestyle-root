@@ -7,6 +7,21 @@ volumes:
   letsencrypt-data:
     external: false
 services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.production
+    entrypoint: /app/bin/start
+    env_file:
+      - ./api/.env.production
+    environment:
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+      - CABLE_URL=ws://anycable:8080/cable
+    depends_on:
+      - redis
+      - db
+      - anycable
   webserver:
     build:
       context: ./webserver
@@ -23,20 +38,6 @@ services:
       - ui
   ui:
     image: 'fuksito/ourcodestyle_ui:latest'
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile.production
-    entrypoint: /app/bin/start
-    env_file:
-      - ./api/.env.production
-    environment:
-      - ANYCABLE_REDIS_URL=redis://redis:6379/
-      - CABLE_URL=ws://anycable:8080/cable
-    depends_on:
-      - redis
-      - db
-      - anycable
   rpc:
     build:
       context: ./api
@@ -45,6 +46,7 @@ services:
     env_file:
       - ./api/.env.production
     environment:
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - ANYCABLE_RPC_HOST=0.0.0.0:50051
     depends_on:
