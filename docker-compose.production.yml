@@ -17,7 +17,7 @@ services:
     environment:
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
-      - CABLE_URL=ws://anycable:8080/cable
+      - CABLE_URL=ws://anycable:7008/cable
     depends_on:
       - redis
       - db
@@ -57,9 +57,9 @@ services:
   anycable:
     image: 'anycable/anycable-go:v0.6.1'
     ports:
-      - "8080:8080"
+      - "7008:7008"
     environment:
-      - PORT=8080
+      - PORT=7008
       - REDIS_URL=redis://redis:6379/0
       - ANYCABLE_RPC_HOST=rpc:50051
     depends_on:
