@@ -10,11 +10,27 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile.production
     entrypoint: /app/bin/start
     env_file:
       - ./api/.env.production
     environment:
+      - REDIS_URL=redis://redis:6379/
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/
+      - ANYCABLE_REDIS_URL=redis://redis:6379/
+      - CABLE_URL=ws://anycable:7008/cable
+      - DATABASE_URL=postgres://postgres:@db/ourcodestyle_production
+    depends_on:
+      - redis
+      - db
+      - anycable
+  sidekiq:
+    build:
+      context: ./api
+    command: sidekiq
+    env_file:
+      - ./api/.env.production
+    environment:
+      - REDIS_URL=redis://redis:6379/
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - CABLE_URL=ws://anycable:7008/cable
@@ -25,7 +41,6 @@ services:
   webserver:
     build:
       context: ./webserver
-      dockerfile: Dockerfile
     volumes:
       - letsencrypt-html:/letsencrypt-html
       - letsencrypt-data:/letsencrypt-data
@@ -41,11 +56,11 @@ services:
   rpc:
     build:
       context: ./api
-      dockerfile: Dockerfile.production
-    command: ./bin/anycable
+    command: anycable
     env_file:
       - ./api/.env.production
     environment:
+      - REDIS_URL=redis://redis:6379/
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - ANYCABLE_RPC_HOST=0.0.0.0:50051

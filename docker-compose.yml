@@ -13,9 +13,11 @@ services:
     env_file:
       - ./api/.env.development
     environment:
+      - REDIS_URL=redis://redis:6379/
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
-      - CABLE_URL=ws://localhost:7008/cable
+      - CABLE_URL=ws://anycable:7008/cable
+      - DATABASE_URL=postgres://postgres:@db/ourcodestyle_development
     depends_on:
       - redis
       - db
@@ -29,6 +31,7 @@ services:
     env_file:
       - ./api/.env.development
     environment:
+      - REDIS_URL=redis://redis:6379/
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
     depends_on:
@@ -37,13 +40,13 @@ services:
   rpc:
     build:
       context: ./api
-      dockerfile: Dockerfile
     command: anycable
     volumes:
       - ./api:/app
     env_file:
       - ./api/.env.development
     environment:
+      - REDIS_URL=redis://redis:6379/
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - ANYCABLE_RPC_HOST=0.0.0.0:50051

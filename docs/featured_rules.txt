@@ -1,0 +1,10 @@
+RuboCop:
+- Style/BracesAroundHashParameters
+- Style/AndOr
+- Style/ArrayJoin
+- Style/CaseEquality
+- Style/LambdaCall
+- Style/EachWithObject
+- Layout/AccessModifierIndentation
+
+ESLint:
