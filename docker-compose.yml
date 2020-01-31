@@ -25,7 +25,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: sidekiq
+    command: bundle exec sidekiq
     volumes:
       - ./api:/app
     env_file:
@@ -40,7 +40,7 @@ services:
   rpc:
     build:
       context: ./api
-    command: anycable
+    command: bundle exec anycable
     volumes:
       - ./api:/app
     env_file:
@@ -50,6 +50,7 @@ services:
       - SIDEKIQ_REDIS_URL=redis://redis:6379/
       - ANYCABLE_REDIS_URL=redis://redis:6379/
       - ANYCABLE_RPC_HOST=0.0.0.0:50051
+      - DATABASE_URL=postgres://postgres:@db/ourcodestyle_development
     depends_on:
       - redis
       - db
