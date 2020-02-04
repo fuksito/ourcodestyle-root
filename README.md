@@ -12,7 +12,7 @@
 ### Cloning Repository
 
 ```bash
-git clone --recurse-submodules https://github.com/fuksito/ourcodestyle-root.git
+git clone --recurse-submodules https://github.com/ourcodestyle/ourcodestyle-root.git
 ```
 
 cd to the folder and run start with docker compose
