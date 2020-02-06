@@ -1,6 +1,7 @@
 [submodule "api"]
 	path = api
 	url = https://github.com/ourcodestyle/ourcodestyle-api
+	branch = master
 [submodule "ui"]
 	path = ui
 	url = https://github.com/ourcodestyle/ourcodestyle-ui
