@@ -1,7 +1,7 @@
 version: "3"
 volumes:
   db-data:
-    external: false
+    external: true
   letsencrypt-html:
     external: false
   letsencrypt-data:
@@ -52,7 +52,7 @@ services:
       - api
       - ui
   ui:
-    image: 'fuksito/ourcodestyle_ui:latest'
+    image: 'fuksito/ourcodestyle_ui:2020.12.29.0'
   rpc:
     build:
       context: ./api
@@ -68,7 +68,7 @@ services:
       - redis
       - db
   redis:
-    image: 'redis:3.2-alpine'
+    image: 'redis:6.0.8-alpine'
   anycable:
     image: 'anycable/anycable-go:v0.6.1'
     ports:

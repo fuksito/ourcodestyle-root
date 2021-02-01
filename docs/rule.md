@@ -6,8 +6,16 @@ Rule can have many Param
 a Param can have Options
 
 Rule
- => Param
-    => Option
+ => Param[]
+    => Option[]
+
+Example:
+
+Rule: Dot Position
+    - Param: EnforcedStyle
+        Options:
+            - same line
+            - next line
 
 Users vote for options of params
 
